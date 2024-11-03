@@ -1,44 +1,45 @@
-
 import React, { useState, useEffect } from 'react';
 import { marked } from 'marked';
 
-const MarkdownEditor = () => {
-  const [markdown, setMarkdown] = useState('# Hello, Markdown!');
-  const [isLoading, setIsLoading] = useState(true);
+function MarkdownEditor() {
+    const [markdown, setMarkdown] = useState('');
+    const [preview, setPreview] = useState('');
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 500); // Simulate loading time for the preview
+    // Update preview whenever markdown changes
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setPreview(marked.parse(markdown));
+            setLoading(false);
+        }, 300);
+        return () => clearTimeout(timer); // Clear timeout on component unmount or markdown change
+    }, [markdown]);
 
-    return () => clearTimeout(timer); // Cleanup timer on component unmount
-  }, []);
+    // Handle textarea input
+    const handleMarkdownChange = (event) => {
+        setMarkdown(event.target.value);
+        setLoading(true);
+    };
 
-  const handleChange = (e) => {
-    setMarkdown(e.target.value);
-  };
+    return (
+        <div className="markdown-editor">
+            <textarea
+                className="textarea"
+                placeholder="Write your markdown here..."
+                value={markdown}
+                onChange={handleMarkdownChange}
+            ></textarea>
 
-  const getMarkdown = () => {
-    return marked(markdown, { gfm: true, breaks: true });
-  };
-
-  return (
-    <div>
-      <textarea
-        className="textarea"
-        value={markdown}
-        onChange={handleChange}
-        rows={10}
-      />
-      <div className="preview">
-        {isLoading ? (
-          <div className="loading">Loading...</div>
-        ) : (
-          <div dangerouslySetInnerHTML={{ __html: getMarkdown() }} />
-        )}
-      </div>
-    </div>
-  );
-};
+            <div className="preview">
+                {loading ? (
+                    <div className="loading">Loading...</div>
+                ) : (
+                    <div dangerouslySetInnerHTML={{ __html: preview }} />
+                )}
+            </div>
+        </div>
+    );
+}
 
 export default MarkdownEditor;
+

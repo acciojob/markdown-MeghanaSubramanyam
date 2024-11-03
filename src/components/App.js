@@ -1,17 +1,18 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import MarkdownEditor from '../pages/MarkdownEditor';
-import  './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import MarkdownEditor from './MarkdownEditor';
 
-const App = () => {
-  return (
-    <div className="app">
-      <Routes>
-        <Route path="/" element={<MarkdownEditor />} />
-      </Routes>
-    </div>
-  );
-};
+function App() {
+    return (
+        <Router>
+            <div className="app">
+                <Routes>
+                    <Route path="/" element={<MarkdownEditor />} />
+                </Routes>
+            </div>
+        </Router>
+    );
+}
 
 export default App;
 
